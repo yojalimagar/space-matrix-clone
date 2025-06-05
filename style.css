@@ -1,0 +1,68 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.navbar{
+    position: fixed;
+     width: 100%;
+}
+/* Customizing the Navbar */
+.navbar-brand img {
+    margin-left: 30px;
+    width: 90px;
+    height: auto;
+}
+
+.navbar-nav .nav-link {
+    color: #333; /* Adjust link color */
+    margin-right: 40px; /* Spacing between links */
+}
+
+.navbar-nav .nav-link:hover {
+    color: #a00; /* Hover color for links */
+}
+
+.connect-us{
+    margin-left: 0px;
+    text-align: center;
+    height: 80px;
+     width:20x;
+    border-radius: 20px; /* Width of the sidebar */
+    border: 0.1px solid black;
+    margin-top: 40px;
+    margin-right: 50px;
+    color: rgb(9, 9, 9);
+    font-size: 0.8rem;
+    writing-mode: vertical-lr; /* Rotate text */
+    text-orientation: mixed; /* Ensure text characters are oriented correctly */
+    transform: rotate(180deg); /* Rotate the text further for desired look */
+    z-index: 1030; /* Ensure it's above other content if needed */
+}
+/* Connect Sidebar Styling */
+.connect-us:hover{
+    background-color: #a00;
+}
+
+.connect-sidebar span {
+    white-space: nowrap; /* Prevent text wrapping */
+    padding: 10px 0;
+}
+
+.section2{
+    height: 100vh;
+    background-color: yellow;
+}
+
+.section2 h1{
+    align-items: center;
+}
+
+
+/* Responsive Adjustments (Optional, Bootstrap handles much of it) */
+@media (max-width: 991.98px) { /* For smaller screens, adjust sidebar or nav */
+    .connect-sidebar {
+        display: none; /* Hide on smaller screens or adjust its position */
+    }
+}
+
