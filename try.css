@@ -1,0 +1,99 @@
+/* Custom Styles */
+.adapt-workplace-section {
+    padding: 80px 0; /* Adjust padding as needed */
+    background-color: #fff; /* White background as in the image */
+}
+
+.text-content {
+    padding-right: 50px; /* Space between text and image */
+}
+
+.text-content h1 {
+    font-size: 3.5rem; /* Adjust font size as needed */
+    font-weight: bold;
+    color: #333; /* Dark text color */
+    line-height: 1.2;
+}
+
+.discover-now {
+    margin-top: 40px;
+    position: relative;
+    padding-bottom: 20px; /* Space for the line */
+}
+
+.discover-now::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200px; /* Length of the line */
+    height: 2px;
+    background-color: #ccc; /* Color of the line */
+}
+
+.discover-now .btn-link {
+    color: #b02a37; /* Red color for "DISCOVER NOW" */
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 1.1rem;
+    padding: 0;
+}
+
+.discover-now .btn-link:hover {
+    text-decoration: underline;
+}
+
+.discover-now .btn-link i {
+    margin-left: 10px;
+    font-size: 0.9rem;
+}
+
+.image-content {
+    position: relative;
+}
+
+.image-container {
+    position: relative;
+    width: 90%;
+    height: auto; /* Adjust height as needed, or use aspect ratio */
+}
+
+.image-container img {
+    border-radius: 8px; /* Slightly rounded corners for the image */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.overlay-frame {
+    position: absolute;
+    top: 10%; /* Adjust position of the frame */
+    right: 10%; /* Adjust position of the frame */
+    width: 60%; /* Adjust size of the frame */
+    height: 80%; /* Adjust size of the frame */
+    border: 5px solid #fff; /* White border for the frame */
+    /* Use transform to rotate slightly if desired, or simply adjust top/right */
+    /* transform: rotate(-5deg); */
+    pointer-events: none; /* Allows clicks to pass through */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional shadow for the frame */
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+    .text-content {
+        padding-right: 15px;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+    .image-content {
+        text-align: center;
+    }
+    .text-content h1 {
+        font-size: 2.5rem;
+    }
+    .discover-now {
+        display: inline-block; /* Center the discover now line */
+    }
+    .discover-now::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}

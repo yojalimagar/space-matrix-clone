@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Matrix - Transforming Workplaces</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Base Styles & Typography */
+        :root {
+            --primary-color: #000; /* Black */
+            --secondary-color: #fff; /* White */
+            --accent-color: #a00; /* Red for hover/accents */
+            --text-dark: #333;
+            --text-light: #f8f8f8;
+            --font-heading: 'Montserrat', sans-serif;
+            --font-body: 'Open Sans', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            background-color: var(--secondary-color); /* Default background, will be overridden by sections */
+            scroll-behavior: smooth;
+            color: var(--text-dark); /* Default text color, will be overridden by sections */
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+        }
+
+        /* Utility Classes */
+        .text-rotated-180 {
+            writing-mode: vertical-lr;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+        }
+
+        /* --- Main Fixed Navbar (After Reveal) - Default state: Black background, White text --- */
+        .main-fixed-navbar {
+            position: fixed; /* Always fixed */
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1060; /* Above reveal layers */
+            background-color: var(--primary-color); /* Default: Black background */
+            color: var(--secondary-color); /* Default: White text */
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.1s ease, visibility 0s linear 0.5s, background-color 0.3s ease, color 0.3s ease; /* Smooth appearance & color change */
+        }
+        .main-fixed-navbar.fixed-navbar-active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+        .main-fixed-navbar .navbar-brand img {
+            filter: grayscale(100%) brightness(200%); /* Default: White logo */
+            transition: filter 0.3s ease;
+        }
+        .main-fixed-navbar .navbar-nav .nav-link {
+            color: var(--secondary-color); /* Default: White links */
+        }
+        .main-fixed-navbar .connect-us {
+            color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        .main-fixed-navbar .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"); /* Default: White toggler icon */
+        }
+
+        /* --- Main Fixed Navbar - State when white background/black text is desired --- */
+        .main-fixed-navbar.white-navbar {
+            background-color: var(--secondary-color); /* White background */
+            color: var(--primary-color); /* Black text */
+        }
+        .main-fixed-navbar.white-navbar .navbar-brand img {
+            filter: grayscale(0%) brightness(100%); /* Original black logo */
+        }
+        .main-fixed-navbar.white-navbar .navbar-nav .nav-link {
+            color: var(--primary-color); /* Black links */
+        }
+        .main-fixed-navbar.white-navbar .connect-us {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        .main-fixed-navbar.white-navbar .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"); /* Black toggler icon */
+        }
+
+
+        /* Navbar Specific Styling (Common to both layered navbars) */
+        .navbar {
+            width: 100%;
+            /* No direct background here, controlled by parent layer or .main-fixed-navbar */
+        }
+        .navbar-brand img {
+            margin-left: 30px;
+            width: 90px;
+            height: auto;
+            transition: filter 0.5s ease;
+        }
+        .navbar-nav .nav-link {
+            margin-right: 25px;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        .navbar-nav .nav-link:hover {
+            color: var(--accent-color) !important;
+        }
+
+        .connect-us {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 120px;
+            border-radius: 15px;
+            border: 1px solid;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-left: 15px;
+            margin-right: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        .connect-us:hover {
+            background-color: var(--accent-color);
+            color: var(--secondary-color) !important;
+            border-color: var(--accent-color) !important;
+        }
+
+        /* Dropdown Menu Specifics */
+        .dropdown-menu {
+            background-color: var(--secondary-color);
+            border: 1px solid rgba(0,0,0,.15);
+        }
+        .dropdown-menu .dropdown-item {
+            color: var(--text-dark);
+        }
+        .dropdown-menu .dropdown-item:hover {
+            background-color: var(--text-light);
+            color: var(--primary-color);
+        }
+
+        /* --- Scroll Reveal Effect Styles --- */
+        .dummy-scroll-space-trigger {
+            height: 200vh; /* Adjust this height to control animation duration */
+        }
+
+        .reveal-content-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            z-index: 1050; /* Ensure it's above other content */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            text-align: center;
+            transition: opacity 0.5s ease, visibility 0s linear 0.5s; /* Smooth hide */
+        }
+
+        .reveal-content-wrapper.reveal-complete {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .base-reveal-layer {
+            background-color: var(--primary-color); /* Black background */
+            z-index: 1;
+            color: var(--secondary-color); /* White text for black background */
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: flex-start; align-items: center; text-align: center;
+            padding: 0; box-sizing: border-box;
+        }
+        /* Navbar inside base layer */
+        .base-reveal-layer .navbar {
+            background-color: var(--primary-color);
+        }
+        .base-reveal-layer .navbar-brand img {
+            filter: grayscale(100%) brightness(200%); /* White logo */
+        }
+        .base-reveal-layer .navbar-nav .nav-link,
+        .base-reveal-layer .connect-us {
+            color: var(--secondary-color); /* White text */
+            border-color: var(--secondary-color); /* White border */
+        }
+        .base-reveal-layer .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"); /* White toggler icon */
+        }
+
+
+        .reveal-overlay-layer {
+            background-color: var(--secondary-color); /* White background */
+            z-index: 2;
+            color: var(--primary-color); /* Black text for white background initially */
+            clip-path: inset(0 0 0 0); /* Initial clip-path: fully visible */
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: flex-start; align-items: center; text-align: center;
+            padding: 0; box-sizing: border-box;
+        }
+        /* Navbar inside overlay layer (initially visible) */
+        .reveal-overlay-layer .navbar {
+            background-color: var(--secondary-color);
+        }
+        .reveal-overlay-layer .navbar-brand img {
+            filter: grayscale(0%) brightness(100%); /* Original black logo */
+        }
+        .reveal-overlay-layer .navbar-nav .nav-link,
+        .reveal-overlay-layer .connect-us {
+            color: var(--primary-color); /* Black text */
+            border-color: var(--primary-color); /* Black border */
+        }
+        .reveal-overlay-layer .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"); /* Black toggler icon */
+        }
+        /* Make the inner content text black on the initial white screen */
+        .reveal-overlay-layer .reveal-content-inner h1 {
+            color: var(--primary-color); /* Ensure h1 is black on white background */
+        }
+
+
+        /* Content inside reveal layers */
+        .reveal-content-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .reveal-content-inner img {
+            margin-bottom: 2rem;
+            max-width: 250px;
+        }
+        .reveal-content-inner h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+
+        /* General styles for sections after the reveal */
+        .main-content-section {
+            padding: 80px 20px;
+            text-align: center;
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-after-reveal {
+            background-color: var(--primary-color); /* Black background */
+            color: var(--secondary-color); /* White text */
+            min-height: 100vh; /* Ensure first section covers full viewport */
+            /* Add padding-top to account for the fixed navbar */
+            padding-top: calc(80px + 60px); /* Adjust 60px based on actual navbar height */
+        }
+        .section-after-reveal h1 {
+            font-size: 3rem;
+            line-height: 1.3;
+        }
+
+        .image-section {
+            height: 100vh;
+            background-color: var(--secondary-color); /* White background for image section */
+        }
+        .image-section img {
+            height:600px;
+            width: 1018px;;
+            display: block;
+            padding-top: 90px;
+        }
+
+        .impact-section {
+            background-color: var(--secondary-color); /* White background for impact section */
+            color: var(--primary-color); /* Black text for impact section */
+        }
+        .impact-section h1 {
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            margin-bottom: 0;
+        }
+        .impact-metrics {
+            padding-bottom: 50px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+        }
+        .impact-metrics div {
+            flex: 1 1 200px;
+            font-size: 1.8rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+
+        /* Responsive Adjustments */
+        @media (max-width: 991.98px) {
+            .connect-us {
+                display: none;
+            }
+            .navbar-collapse {
+                background-color: var(--secondary-color); /* White background for collapsed menu */
+                padding: 15px;
+                border-radius: 5px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+            .navbar-collapse.show {
+                background-color: var(--secondary-color);
+            }
+            .navbar-nav .nav-link {
+                color: var(--primary-color); /* Black links in collapsed menu */
+            }
+            .dropdown-menu {
+                position: static !important;
+                float: none !important;
+                width: auto;
+                margin-top: 5px;
+                border: none;
+                box-shadow: none;
+                background-color: var(--text-light);
+            }
+            .dropdown-menu .dropdown-item {
+                padding-left: 30px;
+            }
+            .reveal-content-inner h1 {
+                font-size: 2.5rem;
+            }
+            .section-after-reveal h1 {
+                font-size: 2rem;
+            }
+            .impact-section h1 {
+                font-size: 3rem;
+            }
+            .impact-metrics div {
+                font-size: 1.5rem;
+            }
+
+            /* Responsive adjustments for fixed navbar colors */
+            .main-fixed-navbar.white-navbar .navbar-collapse {
+                background-color: var(--secondary-color); /* Ensure white background for collapsed menu */
+            }
+            .main-fixed-navbar.white-navbar .navbar-nav .nav-link {
+                color: var(--primary-color); /* Ensure black links in collapsed menu */
+            }
+            .main-fixed-navbar .navbar-collapse {
+                background-color: var(--primary-color); /* Black background for collapsed menu */
+            }
+            .main-fixed-navbar .navbar-nav .nav-link {
+                color: var(--secondary-color); /* White links in collapsed menu */
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .reveal-content-inner h1 {
+                font-size: 2rem;
+            }
+            .section-after-reveal h1 {
+                font-size: 1.7rem;
+            }
+            .impact-section h1 {
+                font-size: 2.5rem;
+            }
+            .impact-metrics {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .impact-metrics div {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dummy-scroll-space-trigger"></div>
+
+    <header class="main-fixed-navbar navbar navbar-expand-lg py-0">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="logo.webp" alt="Space Matrix Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="aboutUsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            ABOUT US
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="aboutUsDropdown">
+                            <li><a class="dropdown-item" href="#">Our Story</a></li>
+                            <li><a class="dropdown-item" href="#">Our Team</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">HOW WE WORK</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">OUR WORK</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">BLOGS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">SUSTAINABILITY</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">CAREERS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">CONTACT US</a>
+                    </li>
+                    <li class="nav-item ms-3">
+                        <a class="nav-link" href="#">文 / A</a>
+                    </li>
+                </ul>
+                <div class="connect-us">
+                    <span class="text-rotated-180">CONNECT</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="reveal-content-wrapper">
+        <div class="base-reveal-layer">
+            <header class="navbar navbar-expand-lg py-0">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">
+                        <img src="logo.webp" alt="Space Matrix Logo">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="aboutUsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    ABOUT US
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="aboutUsDropdown">
+                                    <li><a class="dropdown-item" href="#">Our Story</a></li>
+                                    <li><a class="dropdown-item" href="#">Our Team</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">HOW WE WORK</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">OUR WORK</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">BLOGS</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">SUSTAINABILITY</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">CAREERS</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">CONTACT US</a>
+                            </li>
+                            <li class="nav-item ms-3">
+                                <a class="nav-link" href="#">文 / A</a>
+                            </li>
+                        </ul>
+                        <div class="connect-us">
+                            <span class="text-rotated-180">CONNECT</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <div class="reveal-content-inner">
+                <img src="logo.webp" alt="Space Matrix Logo">
+                <h1 class="fw-bold">Transforming workplaces</h1>
+                <h1 class="fw-bold">into positive catalysts</h1>
+                      
+            </div>
+        </div>
+
+        <div class="reveal-overlay-layer">
+            <header class="navbar navbar-expand-lg py-0">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">
+                        <img src="logo.webp" alt="Space Matrix Logo">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="aboutUsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    ABOUT US
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="aboutUsDropdown">
+                                    <li><a class="dropdown-item" href="#">Our Story</a></li>
+                                    <li><a class="dropdown-item" href="#">Our Team</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">HOW WE WORK</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">OUR WORK</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">BLOGS</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">SUSTAINABILITY</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">CAREERS</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">CONTACT US</a>
+                            </li>
+                            <li class="nav-item ms-3">
+                                <a class="nav-link" href="#">文 / A</a>
+                            </li>
+                        </ul>
+                        <div class="connect-us">
+                            <span class="text-rotated-180">CONNECT</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <div class="reveal-content-inner">
+                <img src="logo.webp" alt="Space Matrix Logo">
+                <h1 class="fw-bold">Transforming workplaces</h1>
+                <h1 class="fw-bold">into positive catalysts</h1>
+            </div>
+        </div>
+    </div>
+    <section class="main-content-section section-after-reveal">
+            <h1 class="fw-bold">For people to thrive,</h1>
+        <h1 class="fw-bold">businesses to grow and</h1>
+        <h1 class="fw-bold">collectively protect our planet</h1>
+        
+    </section>
+        
+    <section class="main-content-section image-section">
+        <img src="china.webp" alt="Office building in China" class="img-fluid">
+    </section>
+
+    <section class="main-content-section impact-section">
+        <h1>We deliver impact</h1>
+        <div class="impact-metrics">
+            <div>Mn Sq. Ft.Designed & Delivered</div>
+            <div>Award Winning Projects</div>
+            <div>Client Satisfaction Rate</div>
+            <div>Years of Expertise</div>
+        </div>
+    </section>
+
+    <footer class="bg-dark text-white text-center py-4">
+        <p>&copy; 2025 Space Matrix. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const revealContentWrapper = document.querySelector('.reveal-content-wrapper');
+            const revealOverlayLayer = document.querySelector('.reveal-overlay-layer');
+            const dummyScrollSpaceTrigger = document.querySelector('.dummy-scroll-space-trigger');
+            const mainFixedNavbar = document.querySelector('.main-fixed-navbar');
+            const imageSection = document.querySelector('.image-section');
+
+            const revealStartScroll = 0;
+            const revealEndScroll = dummyScrollSpaceTrigger.offsetHeight;
+
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+
+                // --- Reveal animation logic ---
+                let revealProgress = (scrollY - revealStartScroll) / (revealEndScroll - revealStartScroll);
+                revealProgress = Math.max(0, Math.min(1, revealProgress));
+                const clipRightPercentage = revealProgress * 100;
+                revealOverlayLayer.style.clipPath = `inset(0 ${clipRightPercentage}% 0 0)`;
+
+                // --- Manage fixed navbar visibility and color ---
+                if (scrollY >= revealEndScroll) {
+                    // Reveal animation is complete, activate the main fixed navbar
+                    if (!revealContentWrapper.classList.contains('reveal-complete')) {
+                        revealContentWrapper.classList.add('reveal-complete');
+                        revealContentWrapper.style.marginTop = revealEndScroll + 'px';
+                    }
+                    if (!mainFixedNavbar.classList.contains('fixed-navbar-active')) {
+                        mainFixedNavbar.classList.add('fixed-navbar-active');
+                    }
+
+                    // Check if image section is in view to change navbar color
+                    if (imageSection) {
+                        const imageSectionRect = imageSection.getBoundingClientRect();
+                        // Change navbar to white when top of image section is at or above viewport top
+                        if (imageSectionRect.top <= 0) {
+                            mainFixedNavbar.classList.add('white-navbar');
+                        } else {
+                            // Revert to black if scrolled back above image section
+                            mainFixedNavbar.classList.remove('white-navbar');
+                        }
+                    }
+
+                } else {
+                    // Reveal animation is in progress or not yet started
+                    if (revealContentWrapper.classList.contains('reveal-complete')) {
+                        revealContentWrapper.classList.remove('reveal-complete');
+                        revealContentWrapper.style.marginTop = '0';
+                    }
+                    if (mainFixedNavbar.classList.contains('fixed-navbar-active')) {
+                        mainFixedNavbar.classList.remove('fixed-navbar-active');
+                        // Ensure it's not white if going back to reveal state
+                        mainFixedNavbar.classList.remove('white-navbar');
+                    }
+                }
+            });
+
+            // Trigger a scroll event on page load to set the initial state correctly
+            window.dispatchEvent(new Event('scroll'));
+        });
+    </script>
+</body>
+</html>

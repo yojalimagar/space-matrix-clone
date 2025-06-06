@@ -1,0 +1,136 @@
+/* Custom Styles */
+body {
+    font-family: Arial, sans-serif; /* Example font */
+}
+
+.projects-section {
+    background-color: #f8f9fa; /* Light background for the section */
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.project-card {
+    text-align: center;
+    /* Optional: Add some padding if the content inside the card is too close to the edge */
+}
+
+.image-wrapper {
+    position: relative;
+    overflow: hidden; /* Ensures no overflow from the image or overlay */
+    border: 1px solid #ddd; /* Subtle border around image as in the example */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Optional subtle shadow */
+}
+
+.image-wrapper img {
+    width: 100%;
+    height: 200px; /* Fixed height for consistency, adjust as needed */
+    object-fit: cover; /* Ensures image covers the area without distortion */
+    display: block; /* Removes extra space below image */
+}
+
+.location-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 3px solid transparent; /* Default transparent border */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    pointer-events: none; /* Allows interaction with elements below */
+    /* Adjust these values to match the white frame's position and size in the example */
+    clip-path: polygon(
+        calc(100% - 20px) 0, 100% 0, 100% 20px,
+        100% calc(100% - 20px), 100% 100%, calc(100% - 20px) 100%,
+        20px 100%, 0 100%, 0 calc(100% - 20px),
+        0 20px, 0 0, 20px 0
+    ); /* Creates the corner cutouts for the border */
+}
+
+.project-info {
+    margin-top: 15px;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.project-name {
+    display: block; /* Puts name on a new line */
+    color: #333;
+    font-size: 1.2em; /* Larger for the name */
+    text-transform: uppercase; /* As in the example */
+}
+
+.project-location {
+    display: block; /* Puts location on a new line */
+    color: #666;
+    font-size: 0.9em; /* Smaller for the location */
+    margin-top: 5px;
+}
+
+/* Specific styling for the white border around the location text, as seen in the image */
+.project-info {
+    position: relative;
+    display: inline-block; /* To make the border wrap tightly around the content */
+    padding: 10px 20px; /* Padding inside the border */
+    border: 1px solid #ccc; /* Light grey border */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Subtle shadow for the box */
+}
+
+/* The lines around the text in the image are more complex.
+   This is a simplified approach using the border.
+   For the exact look, you'd need multiple pseudo-elements or SVG.
+   Let's refine this to match the image's "floating" text box with lines.
+*/
+.project-info {
+    position: relative;
+    display: block; /* Allows full width positioning for lines */
+    padding: 20px 0; /* Padding for the content inside */
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.project-info::before,
+.project-info::after {
+    content: '';
+    position: absolute;
+    background-color: #ccc; /* Grey line color */
+    height: 1px;
+    width: 20%; /* Length of the horizontal lines */
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.project-info::before {
+    left: 0;
+}
+
+.project-info::after {
+    right: 0;
+}
+
+.project-name,
+.project-location {
+    background-color: #f8f9fa; /* Background color to "cut out" the line */
+    padding: 0 10px; /* Padding to create space around text */
+    display: inline-block; /* Allows lines to go around */
+    position: relative; /* For z-index to be above lines */
+    z-index: 1; /* Ensures text is above the lines */
+}
+
+/* Adjustments for responsive view */
+@media (max-width: 767.98px) {
+    .image-wrapper img {
+        height: 180px; /* Slightly smaller on mobile */
+    }
+}
+
+@media (max-width: 575.98px) {
+    .image-wrapper img {
+        height: 150px; /* Even smaller on very small screens */
+    }
+    .project-info {
+        font-size: 0.9rem;
+    }
+    .project-name {
+        font-size: 1em;
+    }
+}
